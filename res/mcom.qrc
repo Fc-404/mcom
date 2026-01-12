@@ -1,0 +1,14 @@
+<!DOCTYPE RCC>
+<RCC>
+  <qresource prefix="qss">
+    <file>qss/global.qss</file>
+    <file>qss/mainwidget.qss</file>
+  </qresource>
+  <qresource prefix="img">
+    <file>img/close_hover.svg</file>
+    <file>img/minimize.svg</file>
+    <file>img/close.svg</file>
+    <file>img/maximize.svg</file>
+    <file>img/fixed.svg</file>
+  </qresource>
+</RCC>

@@ -1,0 +1,3 @@
+[submodule "party/party/qwindowkit"]
+	path = party/party/qwindowkit
+	url = https://github.com/stdware/qwindowkit.git
