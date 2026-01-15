@@ -10,5 +10,9 @@
     <file>img/close.svg</file>
     <file>img/maximize.svg</file>
     <file>img/fixed.svg</file>
+    <file>img/endark.svg</file>
+    <file>img/enfixed.svg</file>
+    <file>img/remaximize.svg</file>
+    <file>img/dark.svg</file>
   </qresource>
 </RCC>

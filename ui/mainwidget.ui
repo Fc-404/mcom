@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>904</width>
-    <height>608</height>
+    <width>900</width>
+    <height>600</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -89,7 +89,7 @@
             <string notr="true"/>
            </property>
            <property name="text">
-            <string>TextLabel</string>
+            <string>MCOM串口工具</string>
            </property>
           </widget>
          </item>
@@ -108,6 +108,32 @@
          </item>
          <item>
           <layout class="QHBoxLayout" name="header_func">
+           <item>
+            <widget class="QComboBox" name="header_funcs">
+             <item>
+              <property name="text">
+               <string>串口模式</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Modbus</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>烧录模式</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="header_dark">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
            <item>
             <widget class="QPushButton" name="header_fixed">
              <property name="text">
@@ -164,6 +190,43 @@
            <property name="text">
             <string>PushButton</string>
            </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="c"/>
+         </item>
+         <item>
+          <widget class="QComboBox" name="comboBox">
+           <item>
+            <property name="text">
+             <string>新建项目</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>新建项目</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>新建项目</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>新建项目</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>新建项目</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>新建项目</string>
+            </property>
+           </item>
           </widget>
          </item>
          <item>

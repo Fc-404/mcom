@@ -15,6 +15,7 @@ file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS
     ${CMAKE_SOURCE_DIR}/src/*.c
     ${CMAKE_SOURCE_DIR}/src/*.cpp
     ${CMAKE_SOURCE_DIR}/src/inc/*.h
+    ${CMAKE_SOURCE_DIR}/src/widget/*.h
 )
 file(GLOB_RECURSE UI_FILES CONFIGURE_DEPENDS
     ${CMAKE_SOURCE_DIR}/ui/*.ui
@@ -22,7 +23,7 @@ file(GLOB_RECURSE UI_FILES CONFIGURE_DEPENDS
 file(GLOB_RECURSE QRC_FILES CONFIGURE_DEPENDS
     ${CMAKE_SOURCE_DIR}/res/*.qrc
 )
-include_directories(${CMAKE_SOURCE_DIR}/src/inc)
+include_directories(${CMAKE_SOURCE_DIR}/src/inc ${CMAKE_SOURCE_DIR}/src/widget)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
