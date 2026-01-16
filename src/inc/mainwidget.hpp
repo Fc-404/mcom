@@ -3,8 +3,12 @@
 
 #include <QWKWidgets/widgetwindowagent.h>
 #include <QWidget>
+
+#ifdef Q_OS_WIN
+#include <dwmapi.h>
 #include <windows.h>
 #include <windowsx.h>
+#endif
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -15,18 +19,13 @@ QT_END_NAMESPACE
 class MainWidget : public QWidget {
     Q_OBJECT
 
-    enum BGType {
-        mica,
-        mica_dark,
-    };
-
 public:
     MainWidget(QWidget* parent = nullptr);
     ~MainWidget();
     bool eventFilter(QObject* obj, QEvent* event) override;
     void changeEvent(QEvent* event) override;
 
-    void setBgType(BGType type = BGType::mica);
+    void setBgDark(bool dark = false);
 
 public slots:
     void exit();

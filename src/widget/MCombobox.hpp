@@ -11,18 +11,17 @@ class ComboPopup : public QWidget {
     Q_OBJECT
 public:
     explicit ComboPopup(QWidget* parent = nullptr)
-        : QWidget(nullptr) // 注意：parent 必须是 nullptr
+        : QWidget(parent) // 注意：parent 必须是 nullptr
     {
         setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::NoDropShadowWindowHint);
 
         setAttribute(Qt::WA_ShowWithoutActivating);
         setFocusPolicy(Qt::NoFocus);
-
-        auto layout = new QVBoxLayout(this);
-        layout->setContentsMargins(0, 0, 0, 0);
+        setAttribute(Qt::WA_TranslucentBackground, true);
+        setStyleSheet("QWidget { background-color: #f0f0f0; border-radius: 12px; padding: 0px; margin: 0px; }");
+        // setFixedHeight(100);
 
         list = new QListWidget(this);
-        layout->addWidget(list);
 
         connect(list, &QListWidget::itemClicked, this, [this](QListWidgetItem* item) {
             emit itemSelected(item->text());
@@ -44,18 +43,15 @@ public:
     {
         setFixedHeight(28);
 
-        label = new QLabel(this);
-        button = new QPushButton("▼", this);
-
-        label->setAlignment(Qt::AlignVCenter | Qt::AlignLeft);
-        button->setFixedWidth(24);
+        button = new QPushButton("", this);
+        button->setObjectName("mbutton");
+        button->setStyleSheet("QPushButton { width: 100px;}");
 
         auto layout = new QHBoxLayout(this);
-        layout->setContentsMargins(6, 0, 0, 0);
-        layout->addWidget(label);
+        layout->setContentsMargins(0, 0, 0, 0);
         layout->addWidget(button);
 
-        popup = new ComboPopup();
+        popup = new ComboPopup(this);
 
         connect(button, &QPushButton::clicked, this, &CustomComboBox::showPopup);
         connect(popup, &ComboPopup::itemSelected, this, &CustomComboBox::setCurrentText);
@@ -64,8 +60,8 @@ public:
     void addItem(const QString& text)
     {
         popup->list->addItem(text);
-        if (label->text().isEmpty())
-            label->setText(text);
+        if (button->text().isEmpty())
+            button->setText(text);
     }
 
 private slots:
@@ -84,11 +80,10 @@ private slots:
 
     void setCurrentText(const QString& text)
     {
-        label->setText(text);
+        button->setText(text);
     }
 
 private:
-    QLabel* label;
     QPushButton* button;
     ComboPopup* popup;
 };

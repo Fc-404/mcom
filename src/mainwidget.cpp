@@ -1,9 +1,11 @@
-#include "mainwidget.h"
-#include "MCombobox.h"
+#include "mainwidget.hpp"
+#include "MCombobox.hpp"
+#include "global.hpp"
 #include "ui_mainwidget.h"
 #include <QAbstractItemView>
 #include <QFile>
 #include <QListView>
+#include <QOperatingSystemVersion>
 
 MainWidget::MainWidget(QWidget* parent)
     : QWidget(parent)
@@ -29,7 +31,7 @@ MainWidget::MainWidget(QWidget* parent)
     agent->setSystemButton(QWK::WindowAgentBase::Close, ui->header_close);
 
     // 设置背景特效
-    setBgType();
+    setBgDark(G::config().value("Theme/ondark").toBool());
 
     // 设置 标题栏 功能按钮icon
     ui->header_close->setIcon(icon_close);
@@ -114,20 +116,42 @@ bool MainWidget::eventFilter(QObject* obj, QEvent* event)
     return QWidget::eventFilter(obj, event);
 }
 
-void MainWidget::setBgType(BGType type)
+void MainWidget::setBgDark(bool dark)
 {
-#ifdef Q_OS_WIN
-    OSVERSIONINFOEX osvi;
-    ZeroMemory(&osvi, sizeof(OSVERSIONINFOEX));
-    osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
-    GetVersionEx((OSVERSIONINFO*)&osvi);
-    if (osvi.dwMajorVersion < 6) {
-        agent->setWindowAttribute("mica", true);
-    }
+    static const auto isWindows11 = []() -> bool {
+        auto v = QOperatingSystemVersion::current();
+        return v.type() == QOperatingSystemVersionBase::Windows
+            && v.majorVersion() == 10
+            && v.microVersion() >= 22000; // Windows 11
+    };
 
-    setAttribute(Qt::WA_TranslucentBackground, true);
-    agent->setWindowAttribute("mica-alt", true);
-#endif
+    bool isblur = G::config().value("Theme/onblur").toBool();
+
+    if (dark) {
+        if (isblur && isWindows11()) {
+            // 深色mica
+            setAttribute(Qt::WA_TranslucentBackground, true);
+            agent->setWindowAttribute("mica-alt", true);
+            HWND hwnd = (HWND)this->winId();
+            BOOL useDarkMode = TRUE;
+            DwmSetWindowAttribute(hwnd, 20, &useDarkMode, sizeof(useDarkMode));
+
+        } else {
+            // 深色普通
+            setAttribute(Qt::WA_TranslucentBackground, false);
+        }
+        G::ondark = true;
+    } else {
+        if (isblur && isWindows11()) {
+            // 浅色mica
+            setAttribute(Qt::WA_TranslucentBackground, true);
+            agent->setWindowAttribute("mica-alt", true);
+        } else {
+            // 浅色普通
+            setAttribute(Qt::WA_TranslucentBackground, false);
+        }
+        G::ondark = false;
+    }
 }
 
 void MainWidget::changeEvent(QEvent* event)

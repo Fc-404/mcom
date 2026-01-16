@@ -14,8 +14,9 @@ qt_standard_project_setup()
 file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS
     ${CMAKE_SOURCE_DIR}/src/*.c
     ${CMAKE_SOURCE_DIR}/src/*.cpp
-    ${CMAKE_SOURCE_DIR}/src/inc/*.h
-    ${CMAKE_SOURCE_DIR}/src/widget/*.h
+    ${CMAKE_SOURCE_DIR}/src/inc/*.hpp
+    ${CMAKE_SOURCE_DIR}/src/widget/*.hpp
+    ${CMAKE_SOURCE_DIR}/src/utli/*.hpp
 )
 file(GLOB_RECURSE UI_FILES CONFIGURE_DEPENDS
     ${CMAKE_SOURCE_DIR}/ui/*.ui
@@ -48,4 +49,5 @@ target_link_libraries(mcom
         Qt::Svg
         QWindowKit::Core
         QWindowKit::Widgets
+        dwmapi
 )
