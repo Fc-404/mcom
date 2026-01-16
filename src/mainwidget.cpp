@@ -125,33 +125,36 @@ void MainWidget::setBgDark(bool dark)
             && v.microVersion() >= 22000; // Windows 11
     };
 
-    bool isblur = G::config().value("Theme/onblur").toBool();
+    bool isblur = false;
+    if (isWindows11())
+        isblur = G::config().value("Theme/onblur").toBool();
 
-    if (dark) {
-        if (isblur && isWindows11()) {
+    if (isblur) {
+#ifdef Q_OS_WIN
+        if (dark) {
             // 深色mica
             setAttribute(Qt::WA_TranslucentBackground, true);
             agent->setWindowAttribute("mica-alt", true);
             HWND hwnd = (HWND)this->winId();
             BOOL useDarkMode = TRUE;
             DwmSetWindowAttribute(hwnd, 20, &useDarkMode, sizeof(useDarkMode));
-
         } else {
-            // 深色普通
-            setAttribute(Qt::WA_TranslucentBackground, false);
-        }
-        G::ondark = true;
-    } else {
-        if (isblur && isWindows11()) {
             // 浅色mica
             setAttribute(Qt::WA_TranslucentBackground, true);
             agent->setWindowAttribute("mica-alt", true);
+        }
+#endif
+    } else {
+        if (dark) {
+            // 深色普通
+            setAttribute(Qt::WA_TranslucentBackground, false);
         } else {
             // 浅色普通
             setAttribute(Qt::WA_TranslucentBackground, false);
         }
-        G::ondark = false;
     }
+
+    G::ondark = dark;
 }
 
 void MainWidget::changeEvent(QEvent* event)
