@@ -28,7 +28,7 @@ MainWidget::MainWidget(QWidget* parent)
     agent->setSystemButton(QWK::WindowAgentBase::Close, ui->header_close);
 
     // 设置背景特效
-    setBgDark(G::config().value("Theme/ondark").toBool());
+    setBgDark(false);
 
     // 设置 标题栏 功能按钮icon
     G::loadSvg(ui->header_close, "close");
@@ -108,6 +108,42 @@ bool MainWidget::eventFilter(QObject* obj, QEvent* event)
     return QWidget::eventFilter(obj, event);
 }
 
+void MainWidget::changeEvent(QEvent* event)
+{
+    if (event->type() == QEvent::WindowStateChange) {
+        // 这里更新全屏icon可以避免win+up键放大后icon不更新
+        if (isMaximized()) {
+            G::loadSvg(ui->header_max, "remaximize");
+        } else {
+            G::loadSvg(ui->header_max, "maximize");
+        }
+    }
+    QWidget::changeEvent(event);
+}
+
+void MainWidget::showEvent(QShowEvent* event)
+{
+    QWidget::showEvent(event);
+
+    static bool afterInit = true;
+    if (afterInit) {
+        afterInit = false;
+
+        /**
+         * 一个奇怪的Bug
+         * 使用windowkit代理后，不能够使用组件winId获取窗口句柄
+         * 否则窗口绘制会出现问题，可能是代理自己管理句柄，结果winId立马创建了句柄
+         * 使用组件的windowHandle->winId()可以获取到窗口句柄而不创建
+         * 但是该方法只能在组件构造后使用，所以迁移到这里执行一次
+         * 同时必须在构造时主动windowHandle()一次
+         * 否则依旧出现绘制问题，不清楚这个问题
+         */
+        bool dark = G::config().value("Theme/ondark").toBool();
+        onDark = dark;
+        setBgDark(dark);
+    }
+}
+
 void MainWidget::setBgDark(bool dark)
 {
     static const auto isWindows11 = []() -> bool {
@@ -127,7 +163,7 @@ void MainWidget::setBgDark(bool dark)
             HWND hwnd = reinterpret_cast<HWND>(win->winId());
             BOOL useDarkMode = dark ? TRUE : FALSE;
 
-            if (dark) {
+            if (!dark) {
                 // 深色mica
                 DwmSetWindowAttribute(hwnd, 20, &useDarkMode, sizeof(useDarkMode));
             } else {
@@ -139,29 +175,10 @@ void MainWidget::setBgDark(bool dark)
         agent->setWindowAttribute("mica-alt", true);
 #endif
     } else {
-        if (dark) {
-            // 深色普通
-            setAttribute(Qt::WA_TranslucentBackground, false);
-        } else {
-            // 浅色普通
-            setAttribute(Qt::WA_TranslucentBackground, false);
-        }
+        setAttribute(Qt::WA_TranslucentBackground, false);
     }
 
     G::ondark = dark;
     G::loadQss(this, nullptr, true);
     G::loadSvg(nullptr, nullptr, true);
-}
-
-void MainWidget::changeEvent(QEvent* event)
-{
-    if (event->type() == QEvent::WindowStateChange) {
-        // 这里更新全屏icon可以避免win+up键放大后icon不更新
-        if (isMaximized()) {
-            G::loadSvg(ui->header_max, "remaximize");
-        } else {
-            G::loadSvg(ui->header_max, "maximize");
-        }
-    }
-    QWidget::changeEvent(event);
 }

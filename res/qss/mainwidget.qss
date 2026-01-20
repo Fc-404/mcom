@@ -8,15 +8,17 @@
     border: none;
     font-size: 20px;
     background: transparent;
-    color: color-text;
 }
 
 #header>.QPushButton:hover {
-    background: color-bg-3;
+    background: color-theme-2;
 }
 
+#header>#header_close {
+    border-radius: none;
+}
 #header>#header_close:hover {
-    background: color-red;
+    background: color-red-6;
 }
 
 #header>#header_funcs {
@@ -27,5 +29,5 @@
 
 #header>#header_funcs QAbstractItemView {
     font-size: 14px;
-    background-color: color-bg;
+    background: color-theme-1;
 }

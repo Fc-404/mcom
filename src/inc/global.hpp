@@ -69,13 +69,35 @@ inline void loadQss(std::variant<QWidget*, QApplication*> w, QString f, bool all
         }
 
         QString qssStr = qss.readAll();
-        theme.beginGroup(G::ondark ? "dark" : "light");
-        QStringList keys = theme.allKeys();
 
-        for (const QString& key : keys) {
+        // 替换为主题颜色，主题色遵循浅色不变，深色为浅色反序
+        QString themeColor = config().value("Theme/themeColor").toString();
+        for (int i = 1; i <= 8; i++) {
+            QString str = QString("color%1-%2")
+                              .arg(themeColor.isEmpty() ? "" : "-" + themeColor)
+                              .arg(G::ondark ? 9 - i : i);
             qssStr.replace(
-                QString(": %1;").arg(key),
-                QString(": %1;").arg(theme.value(key).toString()));
+                QString("color-theme-%1").arg(i), str);
+            qssStr.replace(
+                QString("color-%1").arg(i),
+                QString("color-%1").arg(G::ondark ? 9 - i : i));
+        }
+
+        // 设置通用颜色
+        theme.beginGroup("default");
+        for (const QString& key : theme.allKeys()) {
+            qssStr.replace(
+                QString(" %1").arg(key),
+                QString(" %1").arg(theme.value(key).toString()));
+        }
+        theme.endGroup();
+
+        // 设置专有颜色
+        theme.beginGroup(G::ondark ? "dark" : "light");
+        for (const QString& key : theme.allKeys()) {
+            qssStr.replace(
+                QString(" %1").arg(key),
+                QString(" %1").arg(theme.value(key).toString()));
         }
         theme.endGroup();
 

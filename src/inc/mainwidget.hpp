@@ -24,6 +24,7 @@ public:
     ~MainWidget();
     bool eventFilter(QObject* obj, QEvent* event) override;
     void changeEvent(QEvent* event) override;
+    void showEvent(QShowEvent* event) override;
 
     void setBgDark(bool dark = false);
 
@@ -39,6 +40,5 @@ private:
     QWK::WidgetWindowAgent* agent;
     bool onTop = false; // 窗口置顶
     bool onDark = false; // 窗口暗黑模式
-
 };
 #endif // MAINWIDGET_H

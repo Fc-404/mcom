@@ -1,18 +1,44 @@
 * {
-    color: color-text;
+    color: color-8;
 }
 
 QPushButton {
-    background: color-bg-1;
+    background: transparent;
     border: 1px solid;
-    border-color: color-bg-3;
+    border-color: color-theme-3;
     border-radius: 6px;
+    padding: 3px 6px;
 }
 
 QPushButton:hover {
-    background: color-hover;
+    background: color-theme-1;
+    border-color: color-theme-5;
 }
 
 QPushButton:pressed {
-    background: color-pressed;
+    border-width: 2px;
+    background: color-theme-1;
+    border-color: color-theme-5;
+}
+
+QComboBox {
+    background: transparent;
+    border: 1px solid;
+    border-color: color-theme-3;
+    border-radius: 6px;
+    padding: 3px 6px;
+}
+
+QComboBox:hover {
+    border-width: 2px;
+    border-color: color-theme-5;
+}
+
+QComboBox QAbstractItemView {
+    background: color-theme-1;
+    padding: 3px 0;
+}
+
+QComboBox QAbstractItemView::item {
+    margin: 3px 0;
 }
