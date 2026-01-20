@@ -1,11 +1,12 @@
 #include "mainwidget.hpp"
-#include "MCombobox.hpp"
 #include "global.hpp"
 #include "ui_mainwidget.h"
 #include <QAbstractItemView>
 #include <QFile>
 #include <QListView>
 #include <QOperatingSystemVersion>
+#include <QTimer>
+#include <QWindow>
 
 MainWidget::MainWidget(QWidget* parent)
     : QWidget(parent)
@@ -13,11 +14,7 @@ MainWidget::MainWidget(QWidget* parent)
 {
     ui->setupUi(this);
 
-    QFile qssFile(":/qss/qss/mainwidget.qss");
-    if (qssFile.open(QFile::ReadOnly)) {
-        this->setStyleSheet(qssFile.readAll());
-        qssFile.close();
-    }
+    G::loadQss(this, "mainwidget");
 
     // 注册 WindowKit 代理，管理窗口
     agent = new QWK::WidgetWindowAgent(this);
@@ -34,22 +31,16 @@ MainWidget::MainWidget(QWidget* parent)
     setBgDark(G::config().value("Theme/ondark").toBool());
 
     // 设置 标题栏 功能按钮icon
-    ui->header_close->setIcon(icon_close);
+    G::loadSvg(ui->header_close, "close");
     ui->header_close->setIconSize(QSize(16, 16));
-    ui->header_max->setIcon(icon_maximize);
+    G::loadSvg(ui->header_max, "maximize");
     ui->header_max->setIconSize(QSize(14, 14));
-    ui->header_min->setIcon(icon_minimize);
+    G::loadSvg(ui->header_min, "minimize");
     ui->header_min->setIconSize(QSize(16, 16));
-    ui->header_fixed->setIcon(icon_fixed);
+    G::loadSvg(ui->header_fixed, "fixed");
     ui->header_fixed->setIconSize(QSize(16, 16));
-    ui->header_dark->setIcon(icon_dark);
-
-    auto combo = new CustomComboBox(this);
-    combo->addItem("1");
-    combo->addItem("2");
-    combo->addItem("3");
-
-    ui->c->addWidget(combo);
+    G::loadSvg(ui->header_dark, "dark");
+    ui->header_dark->setIconSize(QSize(16, 16));
 
     // 处理标题栏按钮
     connect(ui->header_close, &QPushButton::clicked, this, &MainWidget::exit);
@@ -94,22 +85,23 @@ void MainWidget::fixed()
     setWindowFlag(Qt::WindowStaysOnTopHint, onTop);
 #endif
 
-    ui->header_fixed->setIcon(onTop ? icon_enfixed : icon_fixed);
+    G::loadSvg(ui->header_fixed, onTop ? "enfixed" : "fixed");
 }
 
 void MainWidget::dark()
 {
     onDark = !onDark;
-    ui->header_dark->setIcon(onDark ? icon_endark : icon_dark);
+    // G::loadSvg(ui->header_dark, onDark ? "endark" : "dark");
+    setBgDark(onDark);
 }
 
 bool MainWidget::eventFilter(QObject* obj, QEvent* event)
 {
     if (obj == ui->header_close) {
         if (event->type() == QEvent::Enter) {
-            ui->header_close->setIcon(icon_close_hover);
+            G::loadSvg(ui->header_close, "close_hover");
         } else if (event->type() == QEvent::Leave) {
-            ui->header_close->setIcon(icon_close);
+            G::loadSvg(ui->header_close, "close");
         }
         ui->header_close->setIconSize(QSize(16, 16));
     }
@@ -131,18 +123,20 @@ void MainWidget::setBgDark(bool dark)
 
     if (isblur) {
 #ifdef Q_OS_WIN
-        if (dark) {
-            // 深色mica
-            setAttribute(Qt::WA_TranslucentBackground, true);
-            agent->setWindowAttribute("mica-alt", true);
-            HWND hwnd = (HWND)this->winId();
-            BOOL useDarkMode = TRUE;
-            DwmSetWindowAttribute(hwnd, 20, &useDarkMode, sizeof(useDarkMode));
-        } else {
-            // 浅色mica
-            setAttribute(Qt::WA_TranslucentBackground, true);
-            agent->setWindowAttribute("mica-alt", true);
+        if (auto* win = this->windowHandle()) {
+            HWND hwnd = reinterpret_cast<HWND>(win->winId());
+            BOOL useDarkMode = dark ? TRUE : FALSE;
+
+            if (dark) {
+                // 深色mica
+                DwmSetWindowAttribute(hwnd, 20, &useDarkMode, sizeof(useDarkMode));
+            } else {
+                // 浅色mica
+                DwmSetWindowAttribute(hwnd, 20, &useDarkMode, sizeof(useDarkMode));
+            }
         }
+        setAttribute(Qt::WA_TranslucentBackground, true);
+        agent->setWindowAttribute("mica-alt", true);
 #endif
     } else {
         if (dark) {
@@ -155,6 +149,8 @@ void MainWidget::setBgDark(bool dark)
     }
 
     G::ondark = dark;
+    G::loadQss(this, nullptr, true);
+    G::loadSvg(nullptr, nullptr, true);
 }
 
 void MainWidget::changeEvent(QEvent* event)
@@ -162,9 +158,9 @@ void MainWidget::changeEvent(QEvent* event)
     if (event->type() == QEvent::WindowStateChange) {
         // 这里更新全屏icon可以避免win+up键放大后icon不更新
         if (isMaximized()) {
-            ui->header_max->setIcon(icon_remaximize);
+            G::loadSvg(ui->header_max, "remaximize");
         } else {
-            ui->header_max->setIcon(icon_maximize);
+            G::loadSvg(ui->header_max, "maximize");
         }
     }
     QWidget::changeEvent(event);

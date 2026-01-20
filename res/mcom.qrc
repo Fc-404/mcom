@@ -3,16 +3,24 @@
   <qresource prefix="qss">
     <file>qss/global.qss</file>
     <file>qss/mainwidget.qss</file>
+    <file>qss/theme.ini</file>
   </qresource>
   <qresource prefix="img">
-    <file>img/close_hover.svg</file>
-    <file>img/minimize.svg</file>
-    <file>img/close.svg</file>
-    <file>img/maximize.svg</file>
-    <file>img/fixed.svg</file>
-    <file>img/endark.svg</file>
-    <file>img/enfixed.svg</file>
-    <file>img/remaximize.svg</file>
-    <file>img/dark.svg</file>
+    <file>icon/close.svg</file>
+    <file>icon/dark.svg</file>
+    <file>icon/enfixed.svg</file>
+    <file>icon/fixed.svg</file>
+    <file>icon/maximize.svg</file>
+    <file>icon/close_hover.svg</file>
+    <file>icon/minimize.svg</file>
+    <file>icon/remaximize.svg</file>
+    <file>icon/dark/close.svg</file>
+    <file>icon/dark/fixed.svg</file>
+    <file>icon/dark/close_hover.svg</file>
+    <file>icon/dark/maximize.svg</file>
+    <file>icon/dark/remaximize.svg</file>
+    <file>icon/dark/minimize.svg</file>
+    <file>icon/dark/endark.svg</file>
+    <file>icon/dark/enfixed.svg</file>
   </qresource>
 </RCC>
