@@ -1,6 +1,9 @@
 #include "mainwidget.hpp"
 #include "global.hpp"
 #include "ui_mainwidget.h"
+#include "view_modbus.hpp"
+#include "view_program.hpp"
+#include "view_serial.hpp"
 #include <QAbstractItemView>
 #include <QFile>
 #include <QListView>
@@ -49,6 +52,17 @@ MainWidget::MainWidget(QWidget* parent)
     connect(ui->header_min, &QPushButton::clicked, this, &MainWidget::minimize);
     connect(ui->header_fixed, &QPushButton::clicked, this, &MainWidget::fixed);
     connect(ui->header_dark, &QPushButton::clicked, this, &MainWidget::dark);
+
+    // 添加功能页面
+    ui->body_show->addWidget(new ViewSerial(this));
+    ui->body_show->addWidget(new ViewModbus(this));
+    ui->body_show->addWidget(new ViewProgram(this));
+
+    // 处理功能选项
+    connect(ui->header_funcs, &QComboBox::currentIndexChanged, [&](int index) {
+        ui->body_show->setCurrentIndex(index);
+    });
+
 }
 
 MainWidget::~MainWidget()

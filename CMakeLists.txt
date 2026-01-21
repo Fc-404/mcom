@@ -14,6 +14,7 @@ qt_standard_project_setup()
 file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS
     ${CMAKE_SOURCE_DIR}/src/*.c
     ${CMAKE_SOURCE_DIR}/src/*.cpp
+    ${CMAKE_SOURCE_DIR}/src/view/*.cpp
     ${CMAKE_SOURCE_DIR}/src/inc/*.hpp
     ${CMAKE_SOURCE_DIR}/src/widget/*.hpp
     ${CMAKE_SOURCE_DIR}/src/utli/*.hpp

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "mainwidget.hpp"
 #include <QAbstractButton>
 #include <QApplication>
 #include <QDir>
@@ -14,7 +15,8 @@
 
 namespace G {
 /**
- * ICON
+ * ICON自动化配置
+ * 分别设置浅色和深色图标
  */
 struct TICON {
     QIcon light;
@@ -31,13 +33,14 @@ inline static QMap<QString, TICON> ICONS = {
     { "dark", { QIcon(":/img/icon/dark.svg"), QIcon(":/img/icon/dark/endark.svg") } },
 };
 
-/**
- * variable
- */
+// 深色模式
 inline bool ondark = false;
+// 禁止在构造函数内使用，QTimer::singleShot(0, this, 这里可以使用);
+inline MainWidget* mainwidget = nullptr;
 
 /**
- * function
+ * 获取配置文件配置项
+ * 如果程序目录没有文件，则在用户目录创建打开
  */
 inline QSettings& config()
 {
@@ -57,6 +60,29 @@ inline QSettings& config()
     return *ini;
 }
 
+/**
+ * 获取程序主题颜色
+ * @param name 颜色名称 color-name-[0-9]
+ */
+inline QString getColor(QString name, QString section = "default")
+{
+    QSettings theme(":/qss/qss/theme.ini", QSettings::IniFormat);
+    QString colorName(name);
+    QString themeColor = config().value("Theme/themeColor").toString();
+    colorName.replace("color-theme-", themeColor.isEmpty() ? "color-gray-" : ("color-" + themeColor + "-"));
+    int num = colorName.right(1).toInt();
+    ondark ? num = 9 - num : num;
+    colorName = colorName.left(colorName.length() - 1) + QString::number(num);
+
+    return theme.value(section + "/" + colorName).toString();
+}
+
+/**
+ * 为QWidget加载样式表，也可以更新所有注册过的QWidget的样式表
+ * @param w QWidget对象
+ * @param f qss文件名，不需要后缀和前缀
+ * @param allupdate 是否更新所有注册过的QWidget的样式表
+ */
 inline void loadQss(std::variant<QWidget*, QApplication*> w, QString f, bool allupdate = false)
 {
     static QHash<std::variant<QWidget*, QApplication*>, QString> widgets;
@@ -141,6 +167,12 @@ inline void loadQss(std::variant<QWidget*, QApplication*> w, QString f, bool all
     }
 }
 
+/**
+ * 加载图标，同时可以更新所有注册过的按钮的图标
+ * @param w QAbstractButton按钮对象
+ * @param n 图标名称，不需要前缀和后缀
+ * @param allupdate 是否更新所有注册过的按钮的图标
+ */
 inline void loadSvg(QAbstractButton* w, QString n, bool allupdate = false)
 {
     static QHash<QAbstractButton*, QString> widgets;

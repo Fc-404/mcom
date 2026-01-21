@@ -9,6 +9,7 @@ int main(int argc, char* argv[])
     QApplication a(argc, argv);
     MainWidget w;
 
+    G::mainwidget = &w;
     G::loadQss(&a, "global");
 
     w.show();

@@ -4,6 +4,9 @@
     <file>qss/global.qss</file>
     <file>qss/mainwidget.qss</file>
     <file>qss/theme.ini</file>
+    <file>qss/view_modbus.qss</file>
+    <file>qss/view_program.qss</file>
+    <file>qss/view_serial.qss</file>
   </qresource>
   <qresource prefix="img">
     <file>icon/close.svg</file>
