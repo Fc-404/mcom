@@ -163,18 +163,19 @@ void MainWidget::setBgDark(bool dark)
             HWND hwnd = reinterpret_cast<HWND>(win->winId());
             BOOL useDarkMode = dark ? TRUE : FALSE;
 
-            if (!dark) {
-                // 深色mica
-                DwmSetWindowAttribute(hwnd, 20, &useDarkMode, sizeof(useDarkMode));
-            } else {
-                // 浅色mica
-                DwmSetWindowAttribute(hwnd, 20, &useDarkMode, sizeof(useDarkMode));
-            }
+            DwmSetWindowAttribute(hwnd, 20, &useDarkMode, sizeof(useDarkMode));
         }
         setAttribute(Qt::WA_TranslucentBackground, true);
         agent->setWindowAttribute("mica-alt", true);
 #endif
     } else {
+        if (dark) {
+            // 深色
+            ui->main->setStyleSheet("#main { background-color: #312f30; }");
+        } else {
+            // 浅色
+            ui->main->setStyleSheet("#main { background-color: #faf7f9; }");
+        }
         setAttribute(Qt::WA_TranslucentBackground, false);
     }
 

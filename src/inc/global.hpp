@@ -72,15 +72,15 @@ inline void loadQss(std::variant<QWidget*, QApplication*> w, QString f, bool all
 
         // 替换为主题颜色，主题色遵循浅色不变，深色为浅色反序
         QString themeColor = config().value("Theme/themeColor").toString();
-        for (int i = 1; i <= 8; i++) {
-            QString str = QString("color%1-%2")
-                              .arg(themeColor.isEmpty() ? "" : "-" + themeColor)
+        for (int i = 0; i < 10; i++) {
+            QString str = QString(" color-%1-%2")
+                              .arg(themeColor.isEmpty() ? "gray" : themeColor)
                               .arg(G::ondark ? 9 - i : i);
             qssStr.replace(
-                QString("color-theme-%1").arg(i), str);
+                QString(" color-theme-%1").arg(i), str);
             qssStr.replace(
-                QString("color-%1").arg(i),
-                QString("color-%1").arg(G::ondark ? 9 - i : i));
+                QString(" color-%1").arg(i),
+                QString(" color-%1").arg(G::ondark ? 9 - i : i));
         }
 
         // 设置通用颜色

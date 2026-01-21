@@ -1,5 +1,5 @@
 * {
-    color: color-8;
+    color: color-9;
 }
 
 QPushButton {
@@ -11,13 +11,13 @@ QPushButton {
 }
 
 QPushButton:hover {
-    background: color-theme-1;
+    background: color-theme-0;
     border-color: color-theme-5;
 }
 
 QPushButton:pressed {
     border-width: 2px;
-    background: color-theme-1;
+    background: color-theme-0;
     border-color: color-theme-5;
 }
 
