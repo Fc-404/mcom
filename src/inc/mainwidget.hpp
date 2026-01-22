@@ -35,9 +35,11 @@ public slots:
     void fixed();
     void dark();
 
+public:
+    QWK::WidgetWindowAgent* agent;
+
 private:
     Ui::MainWidget* ui;
-    QWK::WidgetWindowAgent* agent;
     bool onTop = false; // 窗口置顶
     bool onDark = false; // 窗口暗黑模式
 };

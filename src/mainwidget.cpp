@@ -62,7 +62,6 @@ MainWidget::MainWidget(QWidget* parent)
     connect(ui->header_funcs, &QComboBox::currentIndexChanged, [&](int index) {
         ui->body_show->setCurrentIndex(index);
     });
-
 }
 
 MainWidget::~MainWidget()

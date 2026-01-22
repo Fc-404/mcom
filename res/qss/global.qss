@@ -6,7 +6,7 @@ QPushButton {
     background: transparent;
     border: 1px solid;
     border-color: color-theme-3;
-    border-radius: 6px;
+    border-radius: radius-nomal;
     padding: 3px 6px;
 }
 
@@ -25,7 +25,7 @@ QComboBox {
     background: transparent;
     border: 1px solid;
     border-color: color-theme-3;
-    border-radius: 6px;
+    border-radius: radius-nomal;
     padding: 3px 6px;
 }
 

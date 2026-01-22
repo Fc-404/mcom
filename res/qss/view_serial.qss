@@ -1,4 +1,5 @@
 #textflow {
-    background-color: rgba(0, 0, 0, 20);
-    border-radius: 12px;
+    border-radius: radius-nomal;
+    border: 1px solid;
+    border-color: color-theme-5;
 }
