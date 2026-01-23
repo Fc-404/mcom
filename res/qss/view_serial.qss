@@ -3,3 +3,8 @@
     border: 1px solid;
     border-color: color-theme-3;
 }
+
+#ctl_baudrate { 
+    padding: 0;
+    padding-right: 0;
+}

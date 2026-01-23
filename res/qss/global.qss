@@ -28,7 +28,8 @@ QComboBox {
     border: 1px solid;
     border-color: color-theme-3;
     border-radius: radius-normal;
-    padding: 3px 6px;
+    padding: 3px;
+    padding-right: 0;
 }
 
 QComboBox:hover {
