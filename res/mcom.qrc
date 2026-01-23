@@ -25,5 +25,6 @@
     <file>icon/dark/minimize.svg</file>
     <file>icon/dark/endark.svg</file>
     <file>icon/dark/enfixed.svg</file>
+    <file>icon/hook.svg</file>
   </qresource>
 </RCC>

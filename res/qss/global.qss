@@ -2,11 +2,12 @@
     color: color-9;
 }
 
+/* QPushButton */
 QPushButton {
     background: transparent;
     border: 1px solid;
     border-color: color-theme-3;
-    border-radius: radius-nomal;
+    border-radius: radius-normal;
     padding: 3px 6px;
 }
 
@@ -21,11 +22,12 @@ QPushButton:pressed {
     border-color: color-theme-5;
 }
 
+/* QComboBox */
 QComboBox {
     background: transparent;
     border: 1px solid;
     border-color: color-theme-3;
-    border-radius: radius-nomal;
+    border-radius: radius-normal;
     padding: 3px 6px;
 }
 
@@ -41,4 +43,46 @@ QComboBox QAbstractItemView {
 
 QComboBox QAbstractItemView::item {
     margin: 3px 0;
+}
+
+/* QCheckBox */
+QCheckBox::indicator {
+    background: transparent;
+    border: 1px solid;
+    border-color: color-theme-3;
+    border-radius: radius-small;
+}
+QCheckBox::indicator:hover {
+    border-color: color-theme-5;
+}
+QCheckBox::indicator:checked {
+    background: color-theme-5;
+    border-color: color-theme-5;
+    image: url(:/img/icon/hook.svg);
+    padding: 3px;
+    width: 8px;
+    height: 8px;
+}
+
+/* QSpinBox */
+QSpinBox {
+    border-radius: radius-small;
+    border: 1px solid;
+    border-color: color-theme-3;
+    border-bottom-color: color-theme-5;
+    padding-top: 0;
+    padding-left: 3px;
+    padding-right: 3px;
+    background: transparent;
+}
+QSpinBox:hover, QSpinBox:focus {
+    border-color: color-theme-5;
+}
+
+/* QPlainTextEdit */
+QPlainTextEdit {
+    border: 1px solid;
+    border-color: color-theme-3;
+    border-radius: radius-normal;
+    background: transparent;
 }

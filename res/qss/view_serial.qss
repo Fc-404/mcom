@@ -1,5 +1,5 @@
 #textflow {
-    border-radius: radius-nomal;
+    border-radius: radius-normal;
     border: 1px solid;
-    border-color: color-theme-5;
+    border-color: color-theme-3;
 }
