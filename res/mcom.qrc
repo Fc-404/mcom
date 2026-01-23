@@ -23,8 +23,10 @@
     <file>icon/dark/maximize.svg</file>
     <file>icon/dark/remaximize.svg</file>
     <file>icon/dark/minimize.svg</file>
-    <file>icon/dark/endark.svg</file>
     <file>icon/dark/enfixed.svg</file>
     <file>icon/hook.svg</file>
+    <file>icon/dark/setting.svg</file>
+    <file>icon/setting.svg</file>
+    <file>icon/dark/dark.svg</file>
   </qresource>
 </RCC>

@@ -24,6 +24,7 @@ MainWidget::MainWidget(QWidget* parent)
     agent->setup(this);
     agent->setTitleBar(ui->header);
     agent->setHitTestVisible(ui->header_funcs);
+    agent->setHitTestVisible(ui->header_setting);
     agent->setHitTestVisible(ui->header_dark);
     agent->setHitTestVisible(ui->header_fixed);
     agent->setSystemButton(QWK::WindowAgentBase::Minimize, ui->header_min);
@@ -44,6 +45,8 @@ MainWidget::MainWidget(QWidget* parent)
     ui->header_fixed->setIconSize(QSize(16, 16));
     G::loadSvg(ui->header_dark, "dark");
     ui->header_dark->setIconSize(QSize(16, 16));
+    G::loadSvg(ui->header_setting, "setting");
+    ui->header_setting->setIconSize(QSize(16, 16));
 
     // 处理标题栏按钮
     connect(ui->header_close, &QPushButton::clicked, this, &MainWidget::exit);

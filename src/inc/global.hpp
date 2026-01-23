@@ -23,14 +23,15 @@ struct TICON {
     QIcon dark;
 };
 inline static QMap<QString, TICON> ICONS = {
-    { "close", { QIcon(":/img/icon/close.svg"), QIcon(":/img/icon/dark/close.svg") } },
-    { "close_hover", { QIcon(":/img/icon/close_hover.svg"), QIcon(":/img/icon/dark/close_hover.svg") } },
-    { "maximize", { QIcon(":/img/icon/maximize.svg"), QIcon(":/img/icon/dark/maximize.svg") } },
-    { "remaximize", { QIcon(":/img/icon/remaximize.svg"), QIcon(":/img/icon/dark/remaximize.svg") } },
-    { "minimize", { QIcon(":/img/icon/minimize.svg"), QIcon(":/img/icon/dark/minimize.svg") } },
-    { "fixed", { QIcon(":/img/icon/fixed.svg"), QIcon(":/img/icon/dark/fixed.svg") } },
-    { "enfixed", { QIcon(":/img/icon/enfixed.svg"), QIcon(":/img/icon/dark/enfixed.svg") } },
-    { "dark", { QIcon(":/img/icon/dark.svg"), QIcon(":/img/icon/dark/endark.svg") } },
+    // { "close", { QIcon(":/img/icon/close.svg"), QIcon(":/img/icon/dark/close.svg") } },
+    // { "close_hover", { QIcon(":/img/icon/close_hover.svg"), QIcon(":/img/icon/dark/close_hover.svg") } },
+    // { "maximize", { QIcon(":/img/icon/maximize.svg"), QIcon(":/img/icon/dark/maximize.svg") } },
+    // { "remaximize", { QIcon(":/img/icon/remaximize.svg"), QIcon(":/img/icon/dark/remaximize.svg") } },
+    // { "minimize", { QIcon(":/img/icon/minimize.svg"), QIcon(":/img/icon/dark/minimize.svg") } },
+    // { "fixed", { QIcon(":/img/icon/fixed.svg"), QIcon(":/img/icon/dark/fixed.svg") } },
+    // { "enfixed", { QIcon(":/img/icon/enfixed.svg"), QIcon(":/img/icon/dark/enfixed.svg") } },
+    // { "dark", { QIcon(":/img/icon/dark.svg"), QIcon(":/img/icon/dark/endark.svg") } },
+    // { "setting", { QIcon(":/img/icon/setting.svg"), QIcon(":/img/icon/dark/setting.svg") } }
 };
 
 // 深色模式
@@ -189,7 +190,10 @@ inline void loadSvg(QAbstractButton* w, QString n, bool allupdate = false)
 
             i.key()->setIcon(G::ondark ? ICONS[i.value()].dark : ICONS[i.value()].light);
         }
-    } else if (qobject_cast<QAbstractButton*>(w) && ICONS.contains(n)) {
+    } else if (qobject_cast<QAbstractButton*>(w)) {
+        if (!ICONS.contains(n)) {
+            ICONS[n] = { QIcon(QString(":/img/icon/%1.svg").arg(n)), QIcon(QString(":/img/icon/dark/%1.svg").arg(n)) };
+        }
         widgets[w] = n;
         w->setIcon(G::ondark ? ICONS[n].dark : ICONS[n].light);
     }
