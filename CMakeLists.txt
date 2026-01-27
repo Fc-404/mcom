@@ -25,7 +25,10 @@ file(GLOB_RECURSE UI_FILES CONFIGURE_DEPENDS
 file(GLOB_RECURSE QRC_FILES CONFIGURE_DEPENDS
     ${CMAKE_SOURCE_DIR}/res/*.qrc
 )
-include_directories(${CMAKE_SOURCE_DIR}/src/inc ${CMAKE_SOURCE_DIR}/src/widget)
+include_directories(
+    ${CMAKE_SOURCE_DIR}/src/inc
+    ${CMAKE_SOURCE_DIR}/src/widget
+    ${CMAKE_SOURCE_DIR}/src/utli)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)

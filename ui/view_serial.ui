@@ -88,7 +88,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_2">
+          <widget class="QPushButton" name="openPort">
            <property name="text">
             <string>打开串口</string>
            </property>
@@ -104,7 +104,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QComboBox" name="comboBox">
+            <widget class="QComboBox" name="box_ports">
              <property name="minimumSize">
               <size>
                <width>72</width>
@@ -131,7 +131,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QComboBox" name="ctl_baudrate">
+            <widget class="QComboBox" name="box_baudrate">
              <property name="minimumSize">
               <size>
                <width>72</width>
@@ -237,7 +237,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QComboBox" name="comboBox_3">
+            <widget class="QComboBox" name="box_databits">
              <property name="minimumSize">
               <size>
                <width>58</width>
@@ -287,7 +287,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QComboBox" name="comboBox_4">
+            <widget class="QComboBox" name="box_stopbits">
              <property name="minimumSize">
               <size>
                <width>58</width>
@@ -329,7 +329,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QComboBox" name="comboBox_5">
+            <widget class="QComboBox" name="box_parity">
              <property name="minimumSize">
               <size>
                <width>58</width>
@@ -349,22 +349,22 @@
              </item>
              <item>
               <property name="text">
-               <string>Odd</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
                <string>Even</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>Mark</string>
+               <string>Odd</string>
               </property>
              </item>
              <item>
               <property name="text">
                <string>Space</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Mark</string>
               </property>
              </item>
             </widget>
@@ -381,7 +381,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QComboBox" name="comboBox_6">
+            <widget class="QComboBox" name="box_flowcontrol">
              <property name="minimumSize">
               <size>
                <width>58</width>
@@ -437,7 +437,7 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_8">
            <item>
-            <widget class="QCheckBox" name="checkBox">
+            <widget class="QCheckBox" name="on_timestamp">
              <property name="text">
               <string>时间戳</string>
              </property>
@@ -447,7 +447,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QCheckBox" name="checkBox_2">
+            <widget class="QCheckBox" name="on_hexshow">
              <property name="text">
               <string>HEX显示</string>
              </property>
@@ -468,7 +468,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QSpinBox" name="spinBox">
+            <widget class="QSpinBox" name="v_timeout">
              <property name="minimumSize">
               <size>
                <width>60</width>
@@ -491,7 +491,7 @@
               <number>9999</number>
              </property>
              <property name="value">
-              <number>100</number>
+              <number>10</number>
              </property>
             </widget>
            </item>
@@ -500,14 +500,14 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_10">
            <item>
-            <widget class="QCheckBox" name="checkBox_3">
+            <widget class="QCheckBox" name="on_timer">
              <property name="text">
               <string>定时发送</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QSpinBox" name="spinBox_2">
+            <widget class="QSpinBox" name="v_timer">
              <property name="minimumSize">
               <size>
                <width>60</width>
@@ -534,14 +534,25 @@
           </layout>
          </item>
          <item>
-          <widget class="QCheckBox" name="checkBox_4">
-           <property name="text">
-            <string>UTF-8编码显示</string>
-           </property>
-           <property name="checked">
-            <bool>true</bool>
-           </property>
-          </widget>
+          <layout class="QHBoxLayout" name="horizontalLayout_14">
+           <item>
+            <widget class="QCheckBox" name="on_utf8show">
+             <property name="text">
+              <string>UTF-8</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="on_hexno">
+             <property name="text">
+              <string>HEX序号</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
         </layout>
        </widget>
@@ -602,7 +613,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QCheckBox" name="checkBox_5">
+             <widget class="QCheckBox" name="on_hexsend">
               <property name="text">
                <string>HEX发送</string>
               </property>

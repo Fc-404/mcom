@@ -4,7 +4,12 @@
     border-color: color-theme-3;
 }
 
-#ctl_baudrate { 
+#ctl_baudrate {
     padding: 0;
     padding-right: 0;
+}
+
+#openPort[status="open"] {
+    background: color-green-6;
+    color: color-0;
 }

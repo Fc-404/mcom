@@ -2,16 +2,28 @@
 #include "mainwidget.hpp"
 #include <QApplication>
 #include <QFile>
+#include <QObject>
+#include <QThread>
 
-int main(int argc, char* argv[])
-{
-    QGuiApplication::setAttribute(Qt::AA_DontCreateNativeWidgetSiblings);
-    QApplication a(argc, argv);
-    MainWidget w;
 
-    G::mainwidget = &w;
-    G::loadQss(&a, "global");
+int main(int argc, char *argv[]) {
+  QGuiApplication::setAttribute(Qt::AA_DontCreateNativeWidgetSiblings);
+  QApplication a(argc, argv);
 
-    w.show();
-    return a.exec();
+  // 初始化串口线程
+  G::comthread = new QThread();
+  G::com = new Com();
+  G::com->moveToThread(G::comthread);
+  QObject::connect(G::comthread, &QThread::started, G::com, &Com::init);
+  G::comthread->start();
+
+  // 存储主widget
+  MainWidget w;
+  G::mainwidget = &w;
+
+  // 给窗口加载样式
+  G::loadQss(&a, "global");
+
+  w.show();
+  return a.exec();
 }
