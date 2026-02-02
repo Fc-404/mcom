@@ -19,8 +19,17 @@ class Com : public QObject {
   Q_OBJECT
 public:
   enum ErrorCode {
-    OpenFailed,
     ParamError,
+
+    NoError,
+    NotFoundError,
+    PermissionError,
+    OpenError,
+    WriteError,
+    ReadError,
+    ResourceError,
+    NotOpenError,
+    UnknownError,
   };
 
 private:
@@ -59,11 +68,42 @@ public:
       rxtimer->start(timeout);
     });
 
-    connect(this, qOverload<QString &>(&Com::send), this, &Com::sendString);
-    connect(this, qOverload<QByteArray &>(&Com::send), this,
-            &Com::sendByteArray);
-    connect(this, qOverload<const char *, uint32_t>(&Com::send), this,
-            &Com::sendChar);
+    connect(serial, &QSerialPort::errorOccurred,
+            [this](QSerialPort::SerialPortError error) {
+              ErrorCode code;
+              switch (error) {
+              case QSerialPort::NoError:
+                code = NoError;
+                break;
+              case QSerialPort::DeviceNotFoundError:
+                code = NotFoundError;
+                break;
+              case QSerialPort::PermissionError:
+                code = PermissionError;
+                break;
+              case QSerialPort::OpenError:
+                code = OpenError;
+                break;
+              case QSerialPort::WriteError:
+                code = WriteError;
+                break;
+              case QSerialPort::ReadError:
+                code = ReadError;
+                break;
+              case QSerialPort::ResourceError:
+                code = ResourceError;
+                break;
+              case QSerialPort::NotOpenError:
+                code = NotOpenError;
+                break;
+              default:
+                code = UnknownError;
+              }
+              emit serialError(code, serial->errorString());
+            });
+
+    connect(this, &Com::send, this, &Com::sendByteArray);
+    connect(this, &Com::sendStr, this, &Com::sendString);
     connect(this, &Com::sendFile, this, &Com::sendFile_);
     connect(this, &Com::open, this, &Com::openPortL);
     connect(this, &Com::close, this, &Com::closePort);
@@ -73,10 +113,9 @@ signals:
   void scanResult(const QStringList &ports);
   void serialError(ErrorCode code, QString error = "");
   void serialData(QByteArray data);
-  void send(QString &data);
-  void send(QByteArray &data);
-  void send(const char *data, uint32_t len);
-  void sendFile(QString &filename);
+  void send(QByteArray data);
+  void sendStr(QString data);
+  void sendFile(QString filename);
   void open(QString, uint32_t, uint8_t, uint8_t, uint8_t, uint8_t);
   void close();
 
@@ -133,10 +172,7 @@ public slots:
     serial->setParity(parity);
     serial->setStopBits(stopBits);
     serial->setFlowControl(flowControl);
-    if (!serial->open(QIODevice::ReadWrite)) {
-      emit serialError(OpenFailed, serial->errorString());
-      return;
-    }
+    serial->open(QIODevice::ReadWrite);
   }
   /**
    * Qt Combobox参数版本打开串口
@@ -212,15 +248,11 @@ public slots:
   }
 
   // 发送QString数据
-  int64_t sendString(QString &data) { return serial->write(data.toUtf8()); }
+  int64_t sendString(QString data) { return serial->write(data.toUtf8()); }
   // 发送QByteArray数据
-  int64_t sendByteArray(QByteArray &data) { return serial->write(data); }
-  // 发送char数据
-  int64_t sendChar(const char *data, uint32_t len) {
-    return serial->write(data, len);
-  }
+  int64_t sendByteArray(QByteArray data) { return serial->write(data); }
   // 发送文件
-  int64_t sendFile_(QString &filename) {
+  int64_t sendFile_(QString filename) {
     // todo
     return 0;
   }

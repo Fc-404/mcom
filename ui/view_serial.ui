@@ -81,7 +81,7 @@
           <number>0</number>
          </property>
          <item>
-          <widget class="QPushButton" name="pushButton">
+          <widget class="QPushButton" name="clearWTF">
            <property name="text">
             <string>清空窗口</string>
            </property>
@@ -594,7 +594,7 @@
              <number>0</number>
             </property>
             <item>
-             <widget class="QPushButton" name="pushButton_3">
+             <widget class="QPushButton" name="txSend">
               <property name="minimumSize">
                <size>
                 <width>0</width>
@@ -620,14 +620,14 @@
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_4">
+             <widget class="QPushButton" name="txSendFile">
               <property name="text">
                <string>发送文件</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_5">
+             <widget class="QPushButton" name="rxSaveText">
               <property name="text">
                <string>保存到文件</string>
               </property>
@@ -637,7 +637,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QPlainTextEdit" name="plainTextEdit"/>
+          <widget class="QPlainTextEdit" name="in_tx"/>
          </item>
          <item>
           <widget class="QWidget" name="verticalWidget_3" native="true">

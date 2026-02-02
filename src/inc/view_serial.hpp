@@ -2,6 +2,8 @@
 
 #include "WTextFlowShow.hpp"
 #include <QWidget>
+#include <cstdint>
+#include <qcontainerfwd.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -22,10 +24,16 @@ public:
 public slots:
   void handleComError(Com::ErrorCode code, QString error);
   void handleComData(QByteArray data);
+  void handleTxCheck();
+  void handleTxSend();
 
 private:
   Ui::ViewSerial *ui;
   WTextFlowShow *textflow;
   bool isComOpen = false;
   QString currentCom;
+  QByteArray txbyte; // tx发送缓冲区
+  QTimer *txtimer;   // tx发送定时器
+  uint64_t rxcount = 0;
+  uint64_t txcount = 0;
 };

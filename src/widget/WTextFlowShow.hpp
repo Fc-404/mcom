@@ -4,8 +4,14 @@
 #include <QPlainTextEdit>
 #include <cstdint>
 #include <deque>
+#include <qabstractscrollarea.h>
+#include <qcolor.h>
 #include <qcontainerfwd.h>
 #include <qdebug.h>
+#include <qnamespace.h>
+#include <qscrollbar.h>
+#include <qtextcursor.h>
+#include <qtextformat.h>
 
 class WTextFlowShow : public QPlainTextEdit {
   Q_OBJECT
@@ -217,27 +223,38 @@ private:
    * @param text 行数据
    */
   void appendOne(std::pair<std::array<char, 13>, QByteArray> text) {
-    QString str;
+    QString str, str_p;
+    QTextCursor tc = textCursor();
+    QTextCharFormat fmt;
+    QScrollBar *bar = verticalScrollBar();
+
+    bool atBottom = (bar->value() >= bar->maximum() - 5);
+    tc.movePosition(QTextCursor::End);
+    tc.insertBlock();
+
     if (ontimestamp) {
-      str += "[";
+      str_p += "[";
       switch (text.first[12]) {
       case Tip:
-        str += "Tip: ";
+        str_p += "Tip: ";
         break;
       case Rx:
-        str += "Rx: ";
+        str_p += "Rx: ";
         break;
       case Tx:
-        str += "Tx: ";
+        str_p += "Tx: ";
         break;
       }
-      str += std::string_view(text.first.data(), 12) + "] ";
+      str_p += std::string_view(text.first.data(), 12) + "] ";
+      fmt.setForeground(Qt::gray);
+      tc.insertText(str_p, fmt);
+      tc.setCharFormat(QTextCharFormat());
     }
     if (onhex) {
       if (onhexno)
         for (uint32_t i = 0; i < text.second.size(); i++) {
           str += QString("%1[%2] ").arg(i).arg(
-              QByteArray(1, text.second[i]).toHex().toUpper());
+              QString::number((unsigned char)text.second[i], 16).toUpper());
         }
       else
         str += text.second.toHex(' ').toUpper();
@@ -247,7 +264,11 @@ private:
       else
         str += QString::fromLatin1(text.second.data(), text.second.size());
     }
-    appendPlainText(str);
+    tc.insertText(str);
+    if (atBottom) {
+      setTextCursor(tc);
+      ensureCursorVisible();
+    }
   }
   /**
    * 重新显示所有行
