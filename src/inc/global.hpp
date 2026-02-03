@@ -15,6 +15,7 @@
 #include <QString>
 #include <QStyle>
 #include <QWidget>
+#include <qobjectdefs.h>
 
 namespace G {
 /**
@@ -210,6 +211,30 @@ inline void setProperty(QWidget *obj, const char *name, QVariant &&value) {
   obj->setProperty(name, value);
   obj->style()->unpolish(obj);
   obj->style()->polish(obj);
+}
+
+inline void Tip(QString s) {
+  QString t = s + " " + QTime::currentTime().toString("hh:mm:ss");
+  QMetaObject::invokeMethod(G::mainwidget, &MainWidget::tip,
+                            Qt::QueuedConnection, t);
+}
+inline void Ok(QString s) {
+  QString t = "<font color=green>" + s + " " +
+              QTime::currentTime().toString("hh:mm:ss") + "</font>";
+  QMetaObject::invokeMethod(G::mainwidget, &MainWidget::tip,
+                            Qt::QueuedConnection, t);
+}
+inline void Warn(QString s) {
+  QString t = "<font color=darkorange>" + s + " " +
+              QTime::currentTime().toString("hh:mm:ss") + "</font>";
+  QMetaObject::invokeMethod(G::mainwidget, &MainWidget::tip,
+                            Qt::QueuedConnection, t);
+}
+inline void Err(QString s) {
+  QString t = "<font color=red>" + s + " " +
+              QTime::currentTime().toString("hh:mm:ss") + "</font>";
+  QMetaObject::invokeMethod(G::mainwidget, &MainWidget::tip,
+                            Qt::QueuedConnection, t);
 }
 } // namespace G
 

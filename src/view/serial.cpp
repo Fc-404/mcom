@@ -34,6 +34,7 @@ ViewSerial::ViewSerial(QWidget *parent)
     if (ports.contains(currentCom)) {
       ui->box_ports->setCurrentText(currentCom);
     }
+    G::Ok("串口列表更新完成！");
   });
 
   // 处理串口线程错误信号
@@ -45,8 +46,10 @@ ViewSerial::ViewSerial(QWidget *parent)
   connect(ui->openPort, &QPushButton::clicked, [this]() {
     if (isComOpen) {
       closeCom();
+      G::Ok("关闭串口" + ui->box_ports->currentText() + "！");
     } else {
       openCom();
+      G::Ok("打开串口" + ui->box_ports->currentText() + "！");
     }
   });
 
@@ -204,18 +207,15 @@ void ViewSerial::handleComError(Com::ErrorCode code, QString error) {
   switch (code) {
   case Com::ErrorCode::OpenError:
     closeCom();
-    QMessageBox::critical(this, "错误", "串口打开失败");
-    qDebug() << "串口打开失败" << error;
+    G::Err("串口打开失败！");
     break;
   case Com::ErrorCode::ParamError:
     closeCom();
-    QMessageBox::critical(this, "错误", "参数错误");
-    qDebug() << "参数错误" << error;
+    G::Err("串口参数错误！");
     break;
   case Com::ErrorCode::PermissionError:
     closeCom();
-    QMessageBox::critical(this, "错误", "串口拒绝访问");
-    qDebug() << "串口拒绝访问" << error;
+    G::Err(QString("串口%1拒绝访问！").arg(ui->box_ports->currentText()));
   default:
     break;
   }
@@ -264,10 +264,13 @@ void ViewSerial::handleTxCheck() {
 }
 
 void ViewSerial::handleTxSend() {
-  //   emit G::com->send(txbyte);
+  if (!ComCallB(&Com::isOpen))
+    return;
   int64_t result = ComCallB(&Com::sendByteArray, txbyte);
   if (result > 0) {
     textflow->append(txbyte, QTime::currentTime(), WTextFlowShow::Tx);
     G::mainwidget->addtx(txbyte.size());
+  } else {
+    G::Err("串口发送失败！请检查是否连接！");
   }
 }

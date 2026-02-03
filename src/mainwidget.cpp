@@ -195,6 +195,8 @@ void MainWidget::setBgDark(bool dark) {
   G::loadSvg(nullptr, nullptr, true);
 }
 
+void MainWidget::tip(QString tip) { ui->tip->setText(tip); }
+
 void MainWidget::addrx(uint32_t len) {
   rxcount += len;
   ui->rx_len->setText(QString::number(rxcount));

@@ -41,6 +41,7 @@ public slots:
   void minimize();
   void fixed();
   void dark();
+  void tip(QString tip);
 
 public:
   QWK::WidgetWindowAgent *agent;
