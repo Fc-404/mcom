@@ -660,36 +660,88 @@
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_13">
               <property name="spacing">
-               <number>0</number>
+               <number>6</number>
               </property>
               <item>
-               <widget class="QCheckBox" name="checkBox_6">
+               <widget class="QCheckBox" name="on_crc">
                 <property name="text">
                  <string>校验码</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="pushButton_6">
-                <property name="maximumSize">
-                 <size>
-                  <width>40</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
+               <widget class="QCheckBox" name="on_crcbig">
                 <property name="text">
-                 <string>更多</string>
+                 <string>大端</string>
                 </property>
                </widget>
               </item>
              </layout>
             </item>
             <item>
-             <widget class="QCheckBox" name="checkBox_7">
-              <property name="text">
-               <string>插入到结束位</string>
+             <layout class="QHBoxLayout" name="horizontalLayout_15">
+              <property name="spacing">
+               <number>3</number>
               </property>
-             </widget>
+              <item>
+               <widget class="QLabel" name="label_10">
+                <property name="toolTip">
+                 <string>校验码插入到何处</string>
+                </property>
+                <property name="whatsThis">
+                 <string/>
+                </property>
+                <property name="text">
+                 <string>插入</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="l_crcr">
+                <property name="text">
+                 <string>00 00</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_11">
+                <property name="toolTip">
+                 <string>校验码插入到何处</string>
+                </property>
+                <property name="text">
+                 <string>到</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSpinBox" name="v_crci">
+                <property name="maximumSize">
+                 <size>
+                  <width>50</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="toolTip">
+                 <string>0为第一位，-1为倒数第一位</string>
+                </property>
+                <property name="buttonSymbols">
+                 <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+                </property>
+                <property name="minimum">
+                 <number>-99999</number>
+                </property>
+                <property name="maximum">
+                 <number>99999</number>
+                </property>
+                <property name="value">
+                 <number>-1</number>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </item>
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_12">
@@ -698,21 +750,30 @@
               </property>
               <item>
                <widget class="QLabel" name="label_8">
+                <property name="toolTip">
+                 <string>从哪里开始校验</string>
+                </property>
                 <property name="text">
                  <string>从</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QSpinBox" name="spinBox_3">
+               <widget class="QSpinBox" name="v_crcs">
                 <property name="maximumSize">
                  <size>
                   <width>50</width>
                   <height>16777215</height>
                  </size>
                 </property>
+                <property name="toolTip">
+                 <string>0为第一位，-1为倒数第一位</string>
+                </property>
                 <property name="buttonSymbols">
                  <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+                </property>
+                <property name="minimum">
+                 <number>-99999</number>
                 </property>
                 <property name="maximum">
                  <number>99999</number>
@@ -721,18 +782,27 @@
               </item>
               <item>
                <widget class="QLabel" name="label_9">
+                <property name="toolTip">
+                 <string>到哪里结束校验</string>
+                </property>
                 <property name="text">
                  <string>到</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QSpinBox" name="spinBox_4">
+               <widget class="QSpinBox" name="v_crce">
                 <property name="maximumSize">
                  <size>
                   <width>50</width>
                   <height>16777215</height>
                  </size>
+                </property>
+                <property name="toolTip">
+                 <string>0为第一位，-1为倒数第一位</string>
                 </property>
                 <property name="whatsThis">
                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;结束位：-1表示倒数第二位&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -740,15 +810,21 @@
                 <property name="buttonSymbols">
                  <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
                 </property>
+                <property name="minimum">
+                 <number>-99999</number>
+                </property>
                 <property name="maximum">
                  <number>99999</number>
+                </property>
+                <property name="value">
+                 <number>-1</number>
                 </property>
                </widget>
               </item>
              </layout>
             </item>
             <item>
-             <widget class="QComboBox" name="comboBox_7">
+             <widget class="QComboBox" name="box_crc">
               <property name="font">
                <font>
                 <kerning>true</kerning>
@@ -757,14 +833,12 @@
               <property name="autoFillBackground">
                <bool>false</bool>
               </property>
+              <property name="currentIndex">
+               <number>7</number>
+              </property>
               <property name="sizeAdjustPolicy">
                <enum>QComboBox::SizeAdjustPolicy::AdjustToContentsOnFirstShow</enum>
               </property>
-              <item>
-               <property name="text">
-                <string>None</string>
-               </property>
-              </item>
               <item>
                <property name="text">
                 <string>CheckSum_8</string>
@@ -778,6 +852,11 @@
               <item>
                <property name="text">
                 <string>LRC</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>BCC</string>
                </property>
               </item>
               <item>

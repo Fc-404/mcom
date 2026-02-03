@@ -1,4 +1,5 @@
 #include "WTextFlowShow.hpp"
+#include "byteverify.hpp"
 #include "global.hpp"
 #include "ui_view_serial.h"
 #include "view_serial.hpp"
@@ -6,6 +7,7 @@
 #include <qcombobox.h>
 #include <qcontainerfwd.h>
 #include <qdebug.h>
+#include <qendian.h>
 #include <qinputdialog.h>
 #include <qlogging.h>
 #include <qmessagebox.h>
@@ -16,6 +18,7 @@
 #include <qtextcursor.h>
 #include <qtimer.h>
 #include <qtmetamacros.h>
+#include <type_traits>
 
 ViewSerial::ViewSerial(QWidget *parent)
     : QWidget(parent), ui(new Ui::ViewSerial), txtimer(new QTimer(this)) {
@@ -77,14 +80,36 @@ ViewSerial::ViewSerial(QWidget *parent)
     ui->on_hexsend->setChecked(false);
     ui->in_tx->setPlainText(QString::fromUtf8(txbyte));
   }
+  if (G::config().value("ComCtl/onverify").toBool()) {
+    onVerify = true;
+    ui->on_crc->setChecked(true);
+  } else {
+    onVerify = false;
+    ui->on_crc->setChecked(false);
+  }
+  if (G::config().value("ComCtl/onvbig").toBool()) {
+    onVBig = true;
+    ui->on_crcbig->setChecked(true);
+  } else {
+    onVBig = false;
+    ui->on_crcbig->setChecked(false);
+  }
   int ct_timeout = G::config().value("ComCtl/timeout").toInt();
   int ct_autosend = G::config().value("ComCtl/autosend").toInt();
+  int ct_crci = G::config().value("ComCtl/vcrci").toInt();
+  int ct_crcs = G::config().value("ComCtl/vcrcs").toInt();
+  int ct_crce = G::config().value("ComCtl/vcrce").toInt();
+  QString ct_crct = G::config().value("ComCtl/vcrct").toString();
   if (ct_timeout > 0) {
     ui->v_timeout->setValue(ct_timeout);
   }
   if (ct_autosend > 0) {
     ui->v_timer->setValue(ct_autosend);
   }
+  ui->v_crci->setValue(ct_crci);
+  ui->v_crcs->setValue(ct_crcs);
+  ui->v_crce->setValue(ct_crce);
+  ui->box_crc->setCurrentText(ct_crct);
 
   // 处理显示板功能
   connect(ui->on_timestamp, &QCheckBox::checkStateChanged, [this](int state) {
@@ -142,6 +167,27 @@ ViewSerial::ViewSerial(QWidget *parent)
       txtimer->stop();
     }
   });
+
+  // 处理检验码
+  connect(ui->on_crc, &QCheckBox::checkStateChanged, [this](int state) {
+    bool s = (state == Qt::Checked);
+    G::config().setValue("ComCtl/onverify", s);
+    onVerify = s;
+  });
+  connect(ui->on_crcbig, &QCheckBox::checkStateChanged, [this](int state) {
+    bool s = (state == Qt::Checked);
+    G::config().setValue("ComCtl/onvbig", s);
+    onVBig = s;
+  });
+  connect(
+      ui->box_crc, &QComboBox::currentTextChanged,
+      [this](const QString &s) { G::config().setValue("ComCtl/vcrct", s); });
+  connect(ui->v_crci, &QSpinBox::valueChanged,
+          [this](int value) { G::config().setValue("ComCtl/vcrci", value); });
+  connect(ui->v_crcs, &QSpinBox::valueChanged,
+          [this](int value) { G::config().setValue("ComCtl/vcrcs", value); });
+  connect(ui->v_crce, &QSpinBox::valueChanged,
+          [this](int value) { G::config().setValue("ComCtl/vcrce", value); });
 
   // 刷新串口列表
   emit G::com->scanPorts();
@@ -264,13 +310,103 @@ void ViewSerial::handleTxCheck() {
 }
 
 void ViewSerial::handleTxSend() {
-  if (!ComCallB(&Com::isOpen))
+  if (!ComCallB(&Com::isOpen)) {
+    G::Warn("串口未打开！请检查连接！");
     return;
-  int64_t result = ComCallB(&Com::sendByteArray, txbyte);
-  if (result > 0) {
-    textflow->append(txbyte, QTime::currentTime(), WTextFlowShow::Tx);
-    G::mainwidget->addtx(txbyte.size());
-  } else {
-    G::Err("串口发送失败！请检查是否连接！");
   }
+  QByteArray data = handleVerify();
+  int64_t result = ComCallB(&Com::sendByteArray, data);
+  if (result > 0) {
+    textflow->append(data, QTime::currentTime(), WTextFlowShow::Tx);
+    G::mainwidget->addtx(data.size());
+  } else {
+    G::Err("串口发送失败！请检查连接！");
+  }
+}
+
+QByteArray ViewSerial::handleVerify() {
+  static auto insert = [](QByteArray &data, int i, auto code,
+                          bool big = false) {
+    using codet = std::decay_t<decltype(code)>;
+    int size = sizeof(codet);
+    QByteArray bytes;
+    bytes.resize(size);
+
+    if (big) {
+      qToBigEndian(code, bytes.data());
+    } else {
+      qToLittleEndian(code, bytes.data());
+    }
+
+    return data.insert(i, bytes);
+  };
+
+  if (!onVerify)
+    return txbyte;
+  QByteArray data = txbyte;
+  int l = data.size();
+  int s = ui->v_crcs->text().toInt();
+  int e = ui->v_crce->text().toInt();
+  int i = ui->v_crci->text().toInt();
+
+  if (s >= l) {
+    G::Err("校验起始位置错误！超出数据长度！");
+    return data;
+  }
+  if (e < 0) {
+    e = l + e;
+  }
+  if (e >= l) {
+    G::Err("校验结束位置错误！超出数据长度！");
+    return data;
+  }
+  if (s >= e) {
+    G::Err("校验起始结束位置错误！起始超出结束位置！");
+    return data;
+  }
+  if (i >= l) {
+    G::Err("校验插入位置错误！超出数据长度！");
+    return data;
+  }
+  if (i < 0) {
+    i = l + i + 1;
+  }
+
+  QByteArray vcode;
+  QByteArray vdata = data.sliced(s, e - s + 1);
+  QString vtype = ui->box_crc->currentText();
+
+  if (vtype == "CheckSum_8") {
+    insert(data, i, ByteVerify::checksum8(vdata), onVBig);
+  } else if (vtype == "CheckSum_16") {
+    insert(data, i, ByteVerify::checksum16(vdata), onVBig);
+  } else if (vtype == "LRC") {
+    insert(data, i, ByteVerify::calcLRC(vdata), onVBig);
+  } else if (vtype == "BCC") {
+    insert(data, i, ByteVerify::calcBCC(vdata), onVBig);
+  } else if (vtype == "CRC16_IBM") {
+    insert(data, i, ByteVerify::crc16_ibm(vdata), onVBig);
+  } else if (vtype == "CRC16_MAXIM") {
+    insert(data, i, ByteVerify::crc16_maxim(vdata), onVBig);
+  } else if (vtype == "CRC16_USB") {
+    insert(data, i, ByteVerify::crc16_usb(vdata), onVBig);
+  } else if (vtype == "CRC16_MODBUS") {
+    insert(data, i, ByteVerify::crc16_modbus(vdata), onVBig);
+  } else if (vtype == "CRC16_CCITT") {
+    insert(data, i, ByteVerify::crc16_ccitt(vdata), onVBig);
+  } else if (vtype == "CRC16_CCITT_FALSE") {
+    insert(data, i, ByteVerify::crc16_ccitt_false(vdata), onVBig);
+  } else if (vtype == "CRC16_X25") {
+    insert(data, i, ByteVerify::crc16_x25(vdata), onVBig);
+  } else if (vtype == "CRC16_XMODEM") {
+    insert(data, i, ByteVerify::crc16_xmodem(vdata), onVBig);
+  } else if (vtype == "CRC16_DNP") {
+    insert(data, i, ByteVerify::crc16_dnp(vdata), onVBig);
+  } else if (vtype == "CRC32") {
+    insert(data, i, ByteVerify::crc32(vdata), onVBig);
+  } else if (vtype == "CRC32_MPEG2") {
+    insert(data, i, ByteVerify::crc32_mpeg2(vdata), onVBig);
+  }
+
+  return data;
 }

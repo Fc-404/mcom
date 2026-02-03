@@ -21,6 +21,9 @@ public:
   void openCom();
   void closeCom();
 
+private:
+  QByteArray handleVerify();
+
 public slots:
   void handleComError(Com::ErrorCode code, QString error);
   void handleComData(QByteArray data);
@@ -31,9 +34,11 @@ private:
   Ui::ViewSerial *ui;
   WTextFlowShow *textflow;
   bool isComOpen = false;
-  QString currentCom;
-  QByteArray txbyte; // tx发送缓冲区
-  QTimer *txtimer;   // tx发送定时器
+  bool onVerify = false;
+  bool onVBig = false;
+  QString currentCom; // 临时存储串口名
+  QByteArray txbyte;  // tx发送缓冲区
+  QTimer *txtimer;    // tx发送定时器
   uint64_t rxcount = 0;
   uint64_t txcount = 0;
 };
