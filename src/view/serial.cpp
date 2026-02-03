@@ -148,7 +148,7 @@ ViewSerial::ViewSerial(QWidget *parent)
     } else {
       ui->in_tx->setPlainText(QString::fromUtf8(txbyte));
     }
-    G::config().setValue("TextFlow/onhexsend", s);
+    G::config().setValue("ComCtl/onhexsend", s);
   });
   connect(ui->v_timeout, &QSpinBox::valueChanged,
           [this](int value) { G::config().setValue("ComCtl/timeout", value); });

@@ -38,11 +38,11 @@ if (WIN32)
     set(APP_ICON_RESOURCE_WINDOWS ${CMAKE_CURRENT_SOURCE_DIR}/mcom.rc)
 endif()
 qt_add_executable(mcom
-    # WIN32
+    WIN32
     ${SRC_FILES}
     ${UI_FILES}
     ${QRC_FILES}
-    # mcom.rc
+    mcom.rc
 )
 
 target_link_libraries(mcom

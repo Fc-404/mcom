@@ -5,7 +5,6 @@
 #include <QObject>
 #include <QThread>
 
-
 int main(int argc, char *argv[]) {
   QGuiApplication::setAttribute(Qt::AA_DontCreateNativeWidgetSiblings);
   QApplication a(argc, argv);
@@ -23,6 +22,8 @@ int main(int argc, char *argv[]) {
 
   // 给窗口加载样式
   G::loadQss(&a, "global");
+
+  w.setWindowTitle("MCOM");
 
   w.show();
   return a.exec();
