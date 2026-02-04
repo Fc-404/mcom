@@ -20,8 +20,9 @@ MCOM串口工具是一款现代化、非常易用的串口调试工具。使用Q
  - 支持7中主题色设置
 
 # 下载安装
-
-[MCOM Release](https://github.com/Fc-404/mcom/releases/tag/V1.0) 页面提供了多个版本：
+[MCOM Gitee](https://gitee.com/xazht/mcom/releases/tag/V1.0)
+[MCOM GitHub](https://github.com/Fc-404/mcom/releases/tag/V1.0)
+> 页面提供了多个版本供以下载
 > 强烈建议使用mcom_noupx.7z，在体验上非常好，如果没有7z解压工具，使用mcom_noupx.exe自解压程序。
 - mcom_noupx.7z 便携版，解压即用，未使用upx压缩，启动最快，占用磁盘空间略大（≈35M），运行时占用内存较小（≈10M）
 - mcom_noupx.exe 自解压程序，无需额外7z解压工具，未使用upx压缩，启动最快，占用磁盘空间略大（≈35M），运行时占用内存较小（≈10M）
@@ -60,3 +61,8 @@ vcrce=-1 						#校验计算结束位置
 vcrct=CRC16_MODBUS 				#校验算法
 ````
 该配置一般在程序目录里，名为`mcom.ini`，如果程序目录没有（单程序版本），则会在`用户目录/.xazh`创建`mcom.ini`
+
+# 开源地址
+GitHub: [MCOM](https://github.com/Fc-404/mcom)
+Gitee: [MCOM](https://gitee.com/xazht/mcom)
+
